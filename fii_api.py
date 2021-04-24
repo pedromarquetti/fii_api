@@ -1,35 +1,6 @@
 from collections import OrderedDict
 import requests as req
 from bs4 import BeautifulSoup as bs
-data = {
-    "Código":1,
-    "Setor":"",
-    "Preço Atual":"",
-    "Liquidez Diária":"",
-    "Dividendo":"",
-    "DividendYield":"",
-    "DY (3M) Acumulado":"",
-    "DY (6M) Acumulado":"",
-    "DY (12M) Acumulado":"",
-    "DY (3M) Média":"",
-    "DY (6M) Média":"",
-    "DY (12M) Média":"",
-    "DY Ano":"",
-    "Variação Preço":"",
-    "Rentab":"",
-    "Período":"",
-    "Rentab Acumulada":"",
-    "Patrimônio Líq":"",
-    "VPA":"",
-    "P/VPA":"",
-    "DY Patrimonial":"",
-    "Variação Patrimonial":"",
-    "Rentab. Patr. no Período":"",
-    "Rentab. Patr. Acumulada":"",
-    "Vacância Física":"",
-    "Vacância Financeira":"",
-    "Quantidade Ativos":"",
-}
 
 def main():
     URL = r"https://www.fundsexplorer.com.br/ranking"
@@ -43,7 +14,6 @@ def main():
 
         result.update({td[0].getText():
             {
-
                 "Setor":td[1].getText(),
                 "Preço Atual":td[2].getText(),
                 "Liquidez Diária":td[3].getText(),
