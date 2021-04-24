@@ -1,78 +1,83 @@
 from collections import OrderedDict
 import requests as req
 from bs4 import BeautifulSoup as bs
-
-URL = r"https://www.fundsexplorer.com.br/ranking"
-FILE = "index.html"
 data = {
     "Código":1,
     "Setor":"",
     "Preço Atual":"",
     "Liquidez Diária":"",
     "Dividendo":"",
-    "Dividend":"",
-    "Yield":"",
-    "DY (3M)":"",
-    "Acumulado":"",
-    "DY (6M)":"",
-    "Acumulado":"",
-    "DY (12M)":"",
-    "Acumulado":"",
-    "DY (3M)":"",
-    "Média":"",
-    "DY (6M)":"",
-    "Média":"",
-    "DY (12M)":"",
-    "Média":"",
+    "DividendYield":"",
+    "DY (3M) Acumulado":"",
+    "DY (6M) Acumulado":"",
+    "DY (12M) Acumulado":"",
+    "DY (3M) Média":"",
+    "DY (6M) Média":"",
+    "DY (12M) Média":"",
     "DY Ano":"",
     "Variação Preço":"",
     "Rentab":"",
     "Período":"",
-    "Rentab":"",
-    "Acumulada":"",
-    "Patrimônio":"",
-    "Líq":"",
+    "Rentab Acumulada":"",
+    "Patrimônio Líq":"",
     "VPA":"",
     "P/VPA":"",
-    "DY":"",
-    "Patrimonial":"",
-    "Variação":"",
-    "Patrimonial":"",
-    "Rentab. Patr.":"",
-    "no Período":"",
-    "Rentab. Patr.":"",
-    "Acumulada":"",
-    "Vacância":"",
-    "Física":"",
-    "Vacância":"",
-    "Financeira":"",
-    "Quantidade":"",
-    "Ativos":"",
+    "DY Patrimonial":"",
+    "Variação Patrimonial":"",
+    "Rentab. Patr. no Período":"",
+    "Rentab. Patr. Acumulada":"",
+    "Vacância Física":"",
+    "Vacância Financeira":"",
+    "Quantidade Ativos":"",
 }
-# with req.Session() as s:
-#     get = s.request("get",URL)
 
-#     f = open("index.html","w")
-#     f.write(get.text)    
-f = open(FILE,"r")
-soup = bs(f,"lxml")
-tr = soup.find_all("tr")[1:]
-
-print(data["Código"])
-def createdic():
+def main():
+    URL = r"https://www.fundsexplorer.com.br/ranking"
+    s = req.Session()
+    get = s.request("get",URL)
+    soup = bs(get.text,"lxml")
+    tr = soup.find_all("tr")[1:]
     result = OrderedDict()
     for items in tr: 
-        try:
-            td = items.find_all("td")
-            # print(td[data["Código"]].getText()) # fii names
-            # print(td[1].getText())
-            result.update()
+        td = items.find_all("td")
+
+        result.update({td[0].getText():
+            {
+
+                "Setor":td[1].getText(),
+                "Preço Atual":td[2].getText(),
+                "Liquidez Diária":td[3].getText(),
+                "Dividendo":td[4].getText(),
+                "DividendYield":td[5].getText(),
+                "DY (3M) Acumulado":td[6].getText(),
+                "DY (6M) Acumulado":td[7].getText(),
+                "DY (12M) Acumulado":td[8].getText(),
+                "DY (3M) Média":td[9].getText(),
+                "DY (6M) Média":td[10].getText(),
+                "DY (12M) Média":td[11].getText(),
+                "DY Ano":td[12].getText(),
+                "Variação Preço":td[13].getText(),
+                "Rentab Período":td[14].getText(),
+                "Rentab Acumulada":td[15].getText(),
+                "Patrimônio Líq":td[16].getText(),
+                "VPA":td[17].getText(),
+                "P/VPA":td[18].getText(),
+                "DY Patrimonial":td[19].getText(),
+                "Variação Patrimonial":td[20].getText(),
+                "Rentab. Patr. no Período":td[21].getText(),
+                "Rentab. Patr. Acumulada":td[22].getText(),
+                "Vacância Física":td[23].getText(),
+                "Vacância financeira":td[24].getText(),
+                "Quantidade de ativos":td[25].getText(),
+            }
+            })
 
 
-        except Exception as err:
-            print(err)
+    return result
         
-createdic()
+if __name__ == "__main__":
+    result = main()
+    
 
 
 
