@@ -8,6 +8,6 @@ python3 fii_api.py
 ## windows:
 py fii_api.py
 
-# Requirements>
+# Requirements:
 
 instalar com pip3 install -r requirements.txt
