@@ -1,11 +1,16 @@
 from collections import OrderedDict
 import requests as req
 from bs4 import BeautifulSoup as bs
+import argparse
+
 
 def main():
+    agent = {
+        "User-Agent":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"
+    }
     URL = r"https://www.fundsexplorer.com.br/ranking"
     s = req.Session()
-    get = s.request("get",URL)
+    get = s.request("get",URL,headers=agent)
     soup = bs(get.text,"lxml")
     tr = soup.find_all("tr")[1:]
     result = OrderedDict()
@@ -41,11 +46,25 @@ def main():
                 "Quantidade de ativos":td[25].getText(),
             }
             })
-
-
     return result
-        
+
 if __name__ == "__main__":
     result = main()
-    # you can print locally as ["FII"]["#value"]
+    parser = argparse.ArgumentParser(description="Bem vindo ao menu de ajuda, aqui você encontra todos os possíveis comandos que podem ser executados")
+    parser.add_argument("nome",help="nome do fii (XXXX11)")
+    parser.add_argument("-l",help="Mostra a liquidez do FII",action="store_true")
+    parsed = parser.parse_args()
+    try:
+        print(
+f"""
+Nome: {parsed.nome}
+Preço atual: {result[parsed.nome]["Preço Atual"]},
+Último rendimento: {result[parsed.nome]["Dividendo"]},
+""")
+        if parsed.l:
+            print(f"""Liquidez Diária: {result[parsed.nome]["Liquidez Diária"]}""")
+    except KeyError or NameError as e:
+        print("key not found, try:\n")
+        for k,v in result.items():
+            print(f"names: {k}")
     
