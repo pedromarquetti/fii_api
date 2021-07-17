@@ -3,8 +3,9 @@
 Esta API acessa "https://www.fundsexplorer.com.br/ranking" e gera um JSON para fácil acesso das principais informações de cada FII.
 
 
-
-Ao rodar o arquivo fii_api.py, é possível acessar os dados localmente, ou rodar o arquivo flaskapp.py para criar um servidor local com Flask
+Ao rodar o arquivo fii_api.py, é possível acessar os dados localmente, utilizando flags -l
+-dy para saber informações sobre liquidez e Dividend yield, respectivamente.
+Ou rodar o arquivo flaskapp.py para criar um servidor local com Flask.
 
 # Linha de commando:
 ## linux: 

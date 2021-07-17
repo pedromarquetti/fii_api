@@ -23,7 +23,7 @@ def main():
                 "Preço Atual":td[2].getText(),
                 "Liquidez Diária":td[3].getText(),
                 "Dividendo":td[4].getText(),
-                "DividendYield":td[5].getText(),
+                "Dividend Yield":td[5].getText(),
                 "DY (3M) Acumulado":td[6].getText(),
                 "DY (6M) Acumulado":td[7].getText(),
                 "DY (12M) Acumulado":td[8].getText(),
@@ -49,20 +49,70 @@ def main():
     return result
 
 if __name__ == "__main__":
-    result = main()
-    parser = argparse.ArgumentParser(description="Bem vindo ao menu de ajuda, aqui você encontra todos os possíveis comandos que podem ser executados")
-    parser.add_argument("nome",help="nome do fii (XXXX11)")
-    parser.add_argument("-l",help="Mostra a liquidez do FII",action="store_true")
+    result = main() # dic obj 
+    parser = argparse.ArgumentParser(
+        description="Bem vindo ao menu de ajuda, aqui você encontra todos os possíveis comandos que podem ser executados",
+        usage="Como utilizar: py (ou python3) fii_api.py [-h] [-l](liquidez) [-dy](dividend yield) nome do FII"
+        ) # Argument Parser object
+    parser.add_argument("nome",help="nome do fii (XXXX11)") # adding necessary arg
+    parser.add_argument("-l",help="Mostra a liquidez do FII",action="store_true") #optional arg
+    parser.add_argument("-dy",help="Mostra informações sobre o Dividend Yield do FII",action="store_true")
+    parser.add_argument("-all",help="Mostra todas as informações do FII",action="store_true") #optional arg
+
     parsed = parser.parse_args()
     try:
         print(
-f"""
+        f"""
 Nome: {parsed.nome}
 Preço atual: {result[parsed.nome]["Preço Atual"]},
 Último rendimento: {result[parsed.nome]["Dividendo"]},
-""")
-        if parsed.l:
-            print(f"""Liquidez Diária: {result[parsed.nome]["Liquidez Diária"]}""")
+        """)
+        if parsed.l: # liquidez
+            print(
+        f"""
+Liquidez Diária: {result[parsed.nome]["Liquidez Diária"]}""")
+        elif parsed.dy:
+            print(f"""
+Dividend Yield: {result[parsed.nome]["Dividend Yield"]}
+DY (3M) Acumulado: {result[parsed.nome]["DY (3M) Acumulado"]}
+DY (6M) Acumulado: {result[parsed.nome]["DY (6M) Acumulado"]}
+DY (12M) Acumulado: {result[parsed.nome]["DY (12M) Acumulado"]}
+DY (3M) Média: {result[parsed.nome]["DY (3M) Média"]}
+DY (6M) Média: {result[parsed.nome]["DY (6M) Média"]}
+DY (12M) Média: {result[parsed.nome]["DY (12M) Média"]}
+DY Ano: {result[parsed.nome]["DY Ano"]}
+        """
+            )
+        elif parsed.all:
+            print(f"""
+Setor: {result[parsed.nome]["Setor"]}
+Preço Atual: {result[parsed.nome]["Preço Atual"]}
+Liquidez Diária: {result[parsed.nome]["Liquidez Diária"]}
+Dividendo: {result[parsed.nome]["Dividendo"]}
+Dividend Yield: {result[parsed.nome]["Dividend Yield"]}
+DY (3M) Acumulado: {result[parsed.nome]["DY (3M) Acumulado"]}
+DY (6M) Acumulado: {result[parsed.nome]["DY (6M) Acumulado"]}
+DY (12M) Acumulado: {result[parsed.nome]["DY (12M) Acumulado"]}
+DY (3M) Média: {result[parsed.nome]["DY (3M) Média"]}
+DY (6M) Média: {result[parsed.nome]["DY (6M) Média"]}
+DY (12M) Média: {result[parsed.nome]["DY (12M) Média"]}
+DY Ano: {result[parsed.nome]["DY Ano"]}
+Variação Preço: {result[parsed.nome]["Variação Preço"]}
+Rentab Período: {result[parsed.nome]["Rentab Período"]}
+Rentab Acumulada: {result[parsed.nome]["Rentab Acumulada"]}
+Patrimônio Líq: {result[parsed.nome]["Patrimônio Líq"]}
+VPA: {result[parsed.nome]["VPA"]}
+P/VPA: {result[parsed.nome]["P/VPA"]}
+DY Patrimonial: {result[parsed.nome]["DY Patrimonial"]}
+Variação Patrimonial: {result[parsed.nome]["Variação Patrimonial"]}
+Rentab. Patr. no Período: {result[parsed.nome]["Rentab. Patr. no Período"]}
+Rentab. Patr. Acumulada: {result[parsed.nome]["Rentab. Patr. Acumulada"]}
+Vacância Física: {result[parsed.nome]["Vacância Física"]}
+Vacância financeira: {result[parsed.nome]["Vacância financeira"]}
+Quantidade de ativos: {result[parsed.nome]["Quantidade de ativos"]}
+"""
+            )
+            
     except KeyError or NameError as e:
         print("key not found, try:\n")
         for k,v in result.items():
