@@ -5,19 +5,20 @@ import argparse
 
 
 def main():
-    agent = {
+    """main function, scrapes the URL and returns a ordered dictionary"""
+    agent = { #setting user-agent
         "User-Agent":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"
     }
-    URL = r"https://www.fundsexplorer.com.br/ranking"
-    s = req.Session()
-    get = s.request("get",URL,headers=agent)
+    URL = r"https://www.fundsexplorer.com.br/ranking" #target URL
+    s = req.Session() 
+    get = s.request("get",URL,headers=agent) # sending GET request with Session
     soup = bs(get.text,"lxml")
-    tr = soup.find_all("tr")[1:]
+    tr = soup.find_all("tr")[1:] # BeautifulSoup finds all <tr> tags
     result = OrderedDict()
     for items in tr: 
-        td = items.find_all("td")
+        td = items.find_all("td") # finding <td> inside <tr>
 
-        result.update({td[0].getText():
+        result.update({td[0].getText(): # creating Ordered Dict ({FII:{info...}})
             {
                 "Setor":td[1].getText(),
                 "Preço Atual":td[2].getText(),
