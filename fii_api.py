@@ -53,7 +53,7 @@ if __name__ == "__main__":
     result = main() # dic obj 
     parser = argparse.ArgumentParser(
         description="Bem vindo ao menu de ajuda, aqui você encontra todos os possíveis comandos que podem ser executados",
-        usage="Como utilizar: py (ou python3) fii_api.py [-h] [-l](liquidez) [-dy](dividend yield) nome do FII"
+        usage="py (ou python3) fii_api.py [-h] [-l](liquidez) [-dy](dividend yield) nome do FII"
         ) # Argument Parser object
     parser.add_argument("nome",help="nome do fii (XXXX11)") # adding necessary arg
     parser.add_argument("-l",help="Mostra a liquidez do FII",action="store_true") #optional arg
