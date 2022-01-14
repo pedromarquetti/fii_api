@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup as bs
 import argparse
 import re
 
+
 def main():
     """main function, scrapes the URL and returns a ordered dictionary"""
     agent = {  # setting user-agent
@@ -19,34 +20,35 @@ def main():
     for items in tr:
         td = items.find_all("td")  # finding <td> inside <tr>
 
-        result.update({td[0].getText():  # creating Ordered Dict ({FII:{info...}})
-            {"Setor": td[1].getText(),
-            "Preço Atual R$": re.sub("[^0-9|\.|\-]","",td[2].getText().replace(".","").replace(",",".")),
-            "Liquidez Diária": re.sub("[^0-9|\.|\-]","",td[3].getText()),
-            "Dividendo R$": re.sub("[^0-9|\.|\-]","",td[4].getText().replace(".","").replace(",",".")),
-            "Dividend Yield %": re.sub("[^0-9|\.|\-]","",td[5].getText().replace(".","").replace(",",".")),
-            "DY (3M) Acumulado %": re.sub("[^0-9|\.|\-]","",td[6].getText().replace(".","").replace(",",".")),
-            "DY (6M) Acumulado  %": re.sub("[^0-9|\.|\-]","",td[7].getText().replace(".","").replace(",",".")),
-            "DY (12M) Acumulado %": re.sub("[^0-9|\.|\-]","",td[8].getText().replace(".","").replace(",",".")),
-            "DY (3M) Média %": re.sub("[^0-9|\.|\-]","",td[9].getText().replace(".","").replace(",",".")),
-            "DY (6M) Média %": re.sub("[^0-9|\.|\-]","",td[10].getText().replace(".","").replace(",",".")),
-            "DY (12M) Média %": re.sub("[^0-9|\.|\-]","",td[11].getText().replace(".","").replace(",",".")),
-            "DY Ano %": re.sub("[^0-9|\.|\-]","",td[12].getText().replace(".","").replace(",",".")),
-            "Variação Preço %": re.sub("[^0-9|\.|\-]","",td[13].getText().replace(".","").replace(",",".")),
-            "Rentab Período %": re.sub("[^0-9|\.|\-]","",td[14].getText().replace(".","").replace(",",".")),
-            "Rentab Acumulada %": re.sub("[^0-9|\.|\-]","",td[15].getText().replace(".","").replace(",",".")),
-            "Patrimônio Líq R$": re.sub("[^0-9|\.|\-]","",td[16].getText().replace(".","").replace(",",".")),
-            "VPA R$": re.sub("[^0-9|\.|\-]","",td[17].getText().replace(".","").replace(",",".")),
-            "P/VPA": re.sub("[^0-9|\.|\-]","",td[18].getText().replace(".","").replace(",",".")),
-            "DY Patrimonial %": re.sub("[^0-9|\.|\-]","",td[19].getText().replace(".","").replace(",",".")),
-            "Variação Patrimonial %": re.sub("[^0-9|\.|\-]","",td[20].getText().replace(".","").replace(",",".")),
-            "Rentab. Patr. no Período %": re.sub("[^0-9|\.|\-]","",td[21].getText().replace(".","").replace(",",".")),
-            "Rentab. Patr. Acumulada %": re.sub("[^0-9|\.|\-]","",td[22].getText().replace(".","").replace(",",".")),
-            "Vacância Física %": re.sub("[^0-9|\.|\-]","",td[23].getText().replace(".","").replace(",",".")),
-            "Vacância financeira %": re.sub("[^0-9|\.|\-]","",td[24].getText().replace(".","").replace(",",".")),
-            "Quantidade de ativos": re.sub("[^0-9|\.|\-]","",td[25].getText().replace(".","").replace(",",".")),
-                }
-            }
+        result.update(
+            {td[0].getText():  # creating Ordered Dict ({FII:{info...}})
+             {"Setor": td[1].getText(),
+              "Preço Atual R$": re.sub("[^0-9|\.|\-]", "", td[2].getText().replace(".", "").replace(",", ".")),
+              "Liquidez Diária": re.sub("[^0-9|\.|\-]", "", td[3].getText()),
+              "Dividendo R$": re.sub("[^0-9|\.|\-]", "", td[4].getText().replace(".", "").replace(",", ".")),
+              "Dividend Yield %": re.sub("[^0-9|\.|\-]", "", td[5].getText().replace(".", "").replace(",", ".")),
+              "DY (3M) Acumulado %": re.sub("[^0-9|\.|\-]", "", td[6].getText().replace(".", "").replace(",", ".")),
+              "DY (6M) Acumulado  %": re.sub("[^0-9|\.|\-]", "", td[7].getText().replace(".", "").replace(",", ".")),
+              "DY (12M) Acumulado %": re.sub("[^0-9|\.|\-]", "", td[8].getText().replace(".", "").replace(",", ".")),
+              "DY (3M) Média %": re.sub("[^0-9|\.|\-]", "", td[9].getText().replace(".", "").replace(",", ".")),
+              "DY (6M) Média %": re.sub("[^0-9|\.|\-]", "", td[10].getText().replace(".", "").replace(",", ".")),
+              "DY (12M) Média %": re.sub("[^0-9|\.|\-]", "", td[11].getText().replace(".", "").replace(",", ".")),
+              "DY Ano %": re.sub("[^0-9|\.|\-]", "", td[12].getText().replace(".", "").replace(",", ".")),
+              "Variação Preço %": re.sub("[^0-9|\.|\-]", "", td[13].getText().replace(".", "").replace(",", ".")),
+              "Rentab Período %": re.sub("[^0-9|\.|\-]", "", td[14].getText().replace(".", "").replace(",", ".")),
+              "Rentab Acumulada %": re.sub("[^0-9|\.|\-]", "", td[15].getText().replace(".", "").replace(",", ".")),
+              "Patrimônio Líq R$": re.sub("[^0-9|\.|\-]", "", td[16].getText().replace(".", "").replace(",", ".")),
+              "VPA R$": re.sub("[^0-9|\.|\-]", "", td[17].getText().replace(".", "").replace(",", ".")),
+              "P/VPA": re.sub("[^0-9|\.|\-]", "", td[18].getText().replace(".", "").replace(",", ".")),
+              "DY Patrimonial %": re.sub("[^0-9|\.|\-]", "", td[19].getText().replace(".", "").replace(",", ".")),
+              "Variação Patrimonial %": re.sub("[^0-9|\.|\-]", "", td[20].getText().replace(".", "").replace(",", ".")),
+              "Rentab. Patr. no Período %": re.sub("[^0-9|\.|\-]", "", td[21].getText().replace(".", "").replace(",", ".")),
+              "Rentab. Patr. Acumulada %": re.sub("[^0-9|\.|\-]", "", td[22].getText().replace(".", "").replace(",", ".")),
+              "Vacância Física %": re.sub("[^0-9|\.|\-]", "", td[23].getText().replace(".", "").replace(",", ".")),
+              "Vacância financeira %": re.sub("[^0-9|\.|\-]", "", td[24].getText().replace(".", "").replace(",", ".")),
+              "Quantidade de ativos": re.sub("[^0-9|\.|\-]", "", td[25].getText().replace(".", "").replace(",", ".")),
+              }
+             }
         )
     return result
 
@@ -61,7 +63,7 @@ if __name__ == "__main__":
     parser.add_argument("nome", help="nome do fii (XXXX11)")
     parser.add_argument("-l", help="Mostra a liquidez do FII",
                         action="store_true")  # optional arg
-    parser.add_argument("-dy", 
+    parser.add_argument("-dy",
                         help="Mostra informações sobre o Dividend Yield do FII",
                         action="store_true")
     parser.add_argument("-all", help="Mostra todas as informações do FII",
