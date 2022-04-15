@@ -34,7 +34,10 @@ if __name__ == "__main__":
         description="Bem vindo ao menu de ajuda, aqui você encontra todos os possíveis comandos que podem ser executados",
         usage="py (ou python3) fii_api.py [-h] [-l](liquidez) [-dy](dividend yield) nome do FII"
     )  # Argument Parser object
+
     # adding necessary arg
+    parser.add_argument(
+        "-force", help="Força a atualização do arquivo", action="store_true")
     parser.add_argument("nome", help="nome do fii (XXXX11)")
     parser.add_argument("-l", help="Mostra a liquidez do FII",
                         action="store_true")  # optional arg
@@ -52,7 +55,11 @@ Nome: {parsed.nome}
 Preço atual: R$ {FII["price"]}
 Ultimo dividendo: R$ {FII["lastdividend"]}
             """.rstrip())
-        if parsed.l:
+        if parsed.force:
+            print("Atualizando JSON local")
+            with open("fiis.json", "w") as file:
+                json.dump(save_json(), file)
+        elif parsed.l:
             print(f"""
 liquidez: {FII["liquidezmediadiaria"]}
             """.rstrip())
@@ -78,6 +85,7 @@ Numero de cotas: {FII["numerocotas"]}
 Patrimonio: {FII["patrimonio"]}
 Ulimo rendimento: {FII["lastdividend"]}
             """)
+
     except (KeyError, NameError) as e:
         print("key not found, try:\n")
         for k, v in result.items():
