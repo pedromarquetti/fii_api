@@ -1,65 +1,43 @@
 from collections import OrderedDict
 import requests as req
-from bs4 import BeautifulSoup as bs
 import argparse
-import re
+import json
+from os.path import exists
 
 
-def main():
-    """main function, scrapes the URL and returns a ordered dictionary"""
-    agent = {  # setting user-agent
-        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"
-    }
-    URL = r"https://www.fundsexplorer.com.br/ranking"  # target URL
-    s = req.Session()
-    # sending GET request with Session
-    get = s.request("get", URL, headers=agent)
-    soup = bs(get.text, "lxml")
-    tr = soup.find_all("tr")[1:]  # BeautifulSoup finds all <tr> tags
-    result = OrderedDict()
-    for items in tr:
-        td = items.find_all("td")  # finding <td> inside <tr>
+def save_json():
+    url = r'https://statusinvest.com.br/category/advancedsearchresult?search={"Segment":"","Gestao":"","my_range":"0;20","dy":{"Item1":null,"Item2":null},"p_vp":{"Item1":null,"Item2":null},"percentualcaixa":{"Item1":null,"Item2":null},"numerocotistas":{"Item1":null,"Item2":null},"dividend_cagr":{"Item1":null,"Item2":null},"cota_cagr":{"Item1":null,"Item2":null},"liquidezmediadiaria":{"Item1":null,"Item2":null},"patrimonio":{"Item1":null,"Item2":null},"valorpatrimonialcota":{"Item1":null,"Item2":null},"numerocotas":{"Item1":null,"Item2":null},"lastdividend":{"Item1":null,"Item2":null}}&CategoryType=2'
 
-        result.update(
-            {td[0].getText():  # creating Ordered Dict ({FII:{info...}})
-             {"Setor": td[1].getText(),
-              "Preço Atual R$": re.sub("[^0-9|\.|\-]", "", td[2].getText().replace(".", "").replace(",", ".")),
-              "Liquidez Diária": re.sub("[^0-9|\.|\-]", "", td[3].getText()),
-              "Dividendo R$": re.sub("[^0-9|\.|\-]", "", td[4].getText().replace(".", "").replace(",", ".")),
-              "Dividend Yield %": re.sub("[^0-9|\.|\-]", "", td[5].getText().replace(".", "").replace(",", ".")),
-              "DY (3M) Acumulado %": re.sub("[^0-9|\.|\-]", "", td[6].getText().replace(".", "").replace(",", ".")),
-              "DY (6M) Acumulado  %": re.sub("[^0-9|\.|\-]", "", td[7].getText().replace(".", "").replace(",", ".")),
-              "DY (12M) Acumulado %": re.sub("[^0-9|\.|\-]", "", td[8].getText().replace(".", "").replace(",", ".")),
-              "DY (3M) Média %": re.sub("[^0-9|\.|\-]", "", td[9].getText().replace(".", "").replace(",", ".")),
-              "DY (6M) Média %": re.sub("[^0-9|\.|\-]", "", td[10].getText().replace(".", "").replace(",", ".")),
-              "DY (12M) Média %": re.sub("[^0-9|\.|\-]", "", td[11].getText().replace(".", "").replace(",", ".")),
-              "DY Ano %": re.sub("[^0-9|\.|\-]", "", td[12].getText().replace(".", "").replace(",", ".")),
-              "Variação Preço %": re.sub("[^0-9|\.|\-]", "", td[13].getText().replace(".", "").replace(",", ".")),
-              "Rentab Período %": re.sub("[^0-9|\.|\-]", "", td[14].getText().replace(".", "").replace(",", ".")),
-              "Rentab Acumulada %": re.sub("[^0-9|\.|\-]", "", td[15].getText().replace(".", "").replace(",", ".")),
-              "Patrimônio Líq R$": re.sub("[^0-9|\.|\-]", "", td[16].getText().replace(".", "").replace(",", ".")),
-              "VPA R$": re.sub("[^0-9|\.|\-]", "", td[17].getText().replace(".", "").replace(",", ".")),
-              "P/VPA": re.sub("[^0-9|\.|\-]", "", td[18].getText().replace(".", "").replace(",", ".")),
-              "DY Patrimonial %": re.sub("[^0-9|\.|\-]", "", td[19].getText().replace(".", "").replace(",", ".")),
-              "Variação Patrimonial %": re.sub("[^0-9|\.|\-]", "", td[20].getText().replace(".", "").replace(",", ".")),
-              "Rentab. Patr. no Período %": re.sub("[^0-9|\.|\-]", "", td[21].getText().replace(".", "").replace(",", ".")),
-              "Rentab. Patr. Acumulada %": re.sub("[^0-9|\.|\-]", "", td[22].getText().replace(".", "").replace(",", ".")),
-              "Vacância Física %": re.sub("[^0-9|\.|\-]", "", td[23].getText().replace(".", "").replace(",", ".")),
-              "Vacância financeira %": re.sub("[^0-9|\.|\-]", "", td[24].getText().replace(".", "").replace(",", ".")),
-              "Quantidade de ativos": re.sub("[^0-9|\.|\-]", "", td[25].getText().replace(".", "").replace(",", ".")),
-              }
-             }
-        )
-    return result
+    get = req.request(
+        "get", url, headers={
+            "User-Agent": r"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:99.0) Gecko/20100101 Firefox/99.0",
+            "Referer": r"https://statusinvest.com.br/fundos-imobiliarios/busca-avancada"
+        }
+    ).json()
+    json_dict = OrderedDict()
+    # dict.update({[items for items in get]})
+    for items in get:
+        json_dict.update({str(items["ticker"]): items})
+        # print("{}:{}".format(items["ticker"], items))
+    return json_dict
 
 
 if __name__ == "__main__":
-    result = main()  # dic obj
+    if not exists("fiis.json"):
+        print("baixando JSON de todos os FIIs")
+        with open("fiis.json", "w") as file:
+            json.dump(save_json(), file)
+    fiis_str = open("fiis.json", "r")
+    result = json.load(fiis_str)  # parsed JSON
+
     parser = argparse.ArgumentParser(
         description="Bem vindo ao menu de ajuda, aqui você encontra todos os possíveis comandos que podem ser executados",
         usage="py (ou python3) fii_api.py [-h] [-l](liquidez) [-dy](dividend yield) nome do FII"
     )  # Argument Parser object
+
     # adding necessary arg
+    parser.add_argument(
+        "-force", help="Força a atualização do arquivo", action="store_true")
     parser.add_argument("nome", help="nome do fii (XXXX11)")
     parser.add_argument("-l", help="Mostra a liquidez do FII",
                         action="store_true")  # optional arg
@@ -71,53 +49,45 @@ if __name__ == "__main__":
 
     parsed = parser.parse_args()
     try:
-        FII = result[parsed.nome]
+        FII = result[parsed.nome]  # Nome do FII atual
         print(f"""
 Nome: {parsed.nome}
-Preço atual: R$ {FII["Preço Atual R$"]}
-Ultimo dividendo: R$ {FII["Dividendo R$"]}
+Preço atual: R$ {FII["price"]}
+Ultimo dividendo: R$ {FII["lastdividend"]}
             """.rstrip())
-        if parsed.l:
+        if parsed.force:
+            print("Atualizando JSON local")
+            with open("fiis.json", "w") as file:
+                json.dump(save_json(), file)
+        elif parsed.l:
             print(f"""
-liquidez: {FII["Liquidez Diária"]}
+liquidez: {FII["liquidezmediadiaria"]}
             """.rstrip())
+
         elif parsed.dy:
             print(f"""
-Dividend Yield %: {FII["Dividend Yield %"]}
-DY (3M) Acumulado %: {FII["DY (3M) Acumulado %"]}
-DY (6M) Acumulado  %: {FII["DY (6M) Acumulado  %"]}
-DY (12M) Acumulado %: {FII["DY (12M) Acumulado %"]}
-DY (3M) Média %: {FII["DY (3M) Média %"]}
-DY (6M) Média %: {FII["DY (6M) Média %"]}
-DY (12M) Média %: {FII["DY (12M) Média %"]}
-DY Ano %: {FII["DY Ano %"]}
-DY Patrimonial %: {FII["DY Patrimonial %"]}
+Dividend Yield %: {FII["dy"]}
             """)
         elif parsed.all:
             print(f"""
-Dividend Yield : {FII["Dividend Yield %"]}%
-DY (3M) Acumulado : {FII["DY (3M) Acumulado %"]}%
-DY (6M) Acumulado  : {FII["DY (6M) Acumulado  %"]}%
-DY (12M) Acumulado : {FII["DY (12M) Acumulado %"]}%
-DY (3M) Média : {FII["DY (3M) Média %"]}%
-DY (6M) Média : {FII["DY (6M) Média %"]}%
-DY (12M) Média: {FII["DY (12M) Média %"]}%
-DY Ano : {FII["DY Ano %"]}%
-Variação Preço : {FII["Variação Preço %"]}%
-Rentab Período : {FII["Rentab Período %"]}%
-Rentab Acumulada : {FII["Rentab Acumulada %"]}%
-Patrimônio Líq: R$ {FII["Patrimônio Líq R$"]}
-VPA: R$ {FII["VPA R$"]}
-P/VPA: {FII["P/VPA"]}
-DY Patrimonial : {FII["DY Patrimonial %"]}%
-Variação Patrimonial : {FII["Variação Patrimonial %"]}%
-Rentab. Patr. no Período : {FII["Rentab. Patr. no Período %"]}%
-Rentab. Patr. Acumulada : {FII["Rentab. Patr. Acumulada %"]}%
-Vacância Física : {FII["Vacância Física %"]}%
-Vacância financeira : {FII["Vacância financeira %"]}%
-Quantidade de ativos: {FII["Quantidade de ativos"]}
+Nome da adm.: {FII["companyName"]}
+Dividend Yield : {FII["dy"]}%
+Preço atual: R$ {FII["price"]}
+Tipo de gestão: {FII["gestao"]}
+P/VP: {FII["p_vp"]}
+Valor patrimonial p/ cota: {FII["valorpatrimonialcota"]}
+Liq. méd. diária: {FII["liquidezmediadiaria"]}
+% em caixa: {FII["percentualcaixa"]}
+Dividendo CAGR (3 anos): {FII["dividend_cagr"]}
+Valor CAGR: {FII["cota_cagr"]}
+Numero de cotistas: {FII["numerocotistas"]}
+Numero de cotas: {FII["numerocotas"]}
+Patrimonio: {FII["patrimonio"]}
+Ulimo rendimento: {FII["lastdividend"]}
             """)
-    except KeyError or NameError as e:
+
+    except (KeyError, NameError) as e:
         print("key not found, try:\n")
         for k, v in result.items():
             print(f"names: {k}")
+    fiis_str.close()
