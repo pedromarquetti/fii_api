@@ -10,6 +10,10 @@ fii_api.py salva um JSON localmente para tornar a análise mais rápida
 
 Para praticar minhas habilidades com manipulação JSON e para ver informações sobre FIIs
 
+# Data Science
+
+Uso o ds/datascience.py para visualizar dados dos FIIs
+
 # Linha de commando:
 
 ## linux:
