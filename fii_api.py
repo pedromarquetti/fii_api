@@ -91,3 +91,10 @@ Ulimo rendimento: {FII["lastdividend"]}
         for k, v in result.items():
             print(f"names: {k}")
     fiis_str.close()
+else:
+    if not exists("fiis.json"):
+        print("baixando JSON de todos os FIIs")
+        with open("fiis.json", "w") as file:
+            json.dump(save_json(), file)
+    fiis_str = open("fiis.json", "r")
+    result = json.load(fiis_str)  # parsed JSON
