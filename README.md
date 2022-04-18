@@ -12,7 +12,7 @@ Para praticar minhas habilidades com manipulação JSON e para ver informações
 
 # Data Science
 
-Uso o ds/datascience.py para visualizar dados dos FIIs
+Uso o ds/datascience.py para visualizar dados dos FIIs. Para mais infos, vá para o [README](https://github.com/PedroMarquetti/fii_api/blob/main/ds/README.md)
 
 # Linha de commando:
 
