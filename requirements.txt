@@ -30,7 +30,7 @@ soupsieve==2.3.1
 toml==0.10.2
 
 
-Werkzeug==3.0.1
+Werkzeug==3.0.3
 
 urllib3==1.26.18
 
