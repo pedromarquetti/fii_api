@@ -32,6 +32,6 @@ toml==0.10.2
 
 Werkzeug==3.0.3
 
-urllib3==1.26.18
+urllib3==1.26.19
 
 
