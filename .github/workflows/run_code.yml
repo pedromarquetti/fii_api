@@ -1,4 +1,4 @@
-name: Run Code
+name: Run Json Parser
 
 on:
   push:
