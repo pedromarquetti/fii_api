@@ -18,18 +18,6 @@ def get_data(full=False) -> OrderedDict:
         get = req.request(
             "get", url, headers={
                 "User-Agent": r"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:99.0) Gecko/20100101 Firefox/99.0",
-                "Accept": r"text/html, application/xhtml+xml, application/xml q = 0.9, image/avif, image/webp, mage/png, image/svg+xml, */* q = 0.8",
-                "Referer": r"https://statusinvest.com.br/fundos-imobiliarios/busca-avancada",
-                "Host": r"statusinvest.com.br",
-                "Connection": "keep-alive",
-                "Upgrade-Insecure-Requests": "1",
-                "Sec-Fetch-Dest": "document",
-                "Sec-Fetch-Mode": "navigate",
-                "Sec-Fetch-Site": "cross-site",
-                "TE": "trailers",
-                "Priority": "u = 4",
-                "Pragma": "no-cache",
-                "Cache-Control": "no-cache",
             }
         )
         json = get.json()
