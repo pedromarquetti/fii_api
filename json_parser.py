@@ -42,7 +42,7 @@ def get_data(full=False) -> OrderedDict:
                 json_dict.update({str(item): json[item]})
         return json_dict
     except Exception as e:
-        print_err(f"error in get_data {e}, {get.text}")
+        print_err(f"error in get_data {e}")
         traceback.print_exc()
         sys.exit(4)
 
