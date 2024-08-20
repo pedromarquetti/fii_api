@@ -7,6 +7,9 @@ import traceback
 import sys
 from os.path import exists
 
+FILE_NAME = "fiis.json"
+FILE_PATH = f"./data/{FILE_NAME}"
+
 
 def print_err(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -31,11 +34,31 @@ def get_data(full=False) -> OrderedDict:
         return json_dict
     except Exception as e:
         print_err(f"error in get_data {e}")
-        traceback.print_exc()
         sys.exit(4)
 
 
-if __name__ == "__main__":
+def write_to_file(data):
+    # if user hasn't downloaded the file OR has asked to force download, save the file
+    try:
+        with open(FILE_PATH, "w") as file:
+            json.dump(data, file)
+            file.close()
+    except (Exception, json.JSONDecodeError) as e:
+        print_err(
+            f"error ({e}) occurred while trying to open fiis.json ")
+        sys.exit(1)
+
+
+def open_and_read():
+    try:
+        with open(FILE_PATH, "r") as file:
+            return json.load(file)
+    except Exception as e:
+        print_err(f"error reading file {e}")
+        sys.exit(5)
+
+
+def init_argparse():
     # user is running this script directly
     parser = argparse.ArgumentParser(
         description="Bem vindo ao menu de ajuda, aqui você encontra todos os possíveis comandos que podem ser executados",
@@ -46,6 +69,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-force", help="Força a atualização do arquivo", action="store_true")
     parser.add_argument("nome", help="nome do fii (XXXX11)")
+    parser.add_argument(
+        "-full", help="Pega resposta completa do StatusInvest", action="store_true")
     parser.add_argument("-l", help="Mostra a liquidez do FII",
                         action="store_true")  # optional arg
     parser.add_argument("-dy",
@@ -53,23 +78,20 @@ if __name__ == "__main__":
                         action="store_true")
     parser.add_argument("-all", help="Mostra todas as informações do FII",
                         action="store_true")  # optional arg
-    parsed = parser.parse_args()
+    return parser.parse_args()
 
-    if not exists("fiis.json") or parsed.force:
-        # if user hasn't downloaded the file OR has asked to force download, save the file
-        try:
-            with open("fiis.json", "w") as file:
-                data = get_data()
-                print("baixando JSON de todos os FIIs")
-                json.dump(data, file)
-        except (Exception, json.JSONDecodeError) as e:
-            print_err(
-                f"error ({e}) occurred while trying to open fiis.json / running get_data()")
-            sys.exit(1)
+
+if __name__ == "__main__":
+    parsed = init_argparse()
+    data = get_data(True if parsed.full else False)
+
+    if not exists(FILE_NAME) or parsed.force:
+        write_to_file(data)
 
     try:
-        fiis_str = open("fiis.json", "r")
-        result = json.load(fiis_str)  # parsed JSON
+        result = open_and_read()
+        # fiis_str = open(FILE_PATH, "r")
+        # result = json.load(fiis_str)  # parsed JSON
 
         FII = result[parsed.nome]  # Nome do FII atual
         # basic info
@@ -93,7 +115,6 @@ if __name__ == "__main__":
         print_err(f"error {e}")
         sys.exit(3)
 
-    fiis_str.close()
 else:
     # user is running from somewhere else, exposing get_data
     get_data(True)
