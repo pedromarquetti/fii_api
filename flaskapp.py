@@ -14,7 +14,7 @@ endpoints = {
 @app.route(f"{endpoints['update local json file']}")
 def update_json():
     try:
-        data = get_data(True)
+        data = get_data(False)
         write_to_file(data)
     except Exception as e:
         app.logger.error(e)
@@ -39,8 +39,11 @@ def get_fii(name: str):
     if not name.endswith("11"):
         return redirect("/404")
     else:
-        data = open_and_read()
-        return jsonify(data["BCFF11"])
+        try:
+            data = open_and_read()
+            return jsonify(data[name])
+        except KeyError:
+            return redirect("/404")
 
 
 app.run(debug=True)
