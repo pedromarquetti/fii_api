@@ -151,3 +151,4 @@ cython_debug/
 .history/
 tempCodeRunnerFile.py
 *.json
+/data
