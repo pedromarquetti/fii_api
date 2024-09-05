@@ -2,9 +2,9 @@
 
 Esta API acessa o site [StatusInvest](https://statusinvest.com.br/fundos-imobiliarios/busca-avancada) e gera um JSON para fácil acesso das principais informações de cada FII.
 
-Ao rodar o arquivo fii_api.py, é possível acessar os dados localmente, utilizando flags -l
+Ao rodar o arquivo src/helpers.py, é possível acessar os dados localmente, utilizando flags -l
 -dy ou -all para saber informações sobre liquidez e Dividend yield e um sumário com todas as informações do FII, respectivamente.
-fii_api.py salva um JSON localmente para tornar a análise mais rápida
+src/helpers.py salva um JSON localmente para tornar a análise mais rápida
 
 # Por que?????
 
@@ -18,11 +18,11 @@ Uso o ds/datascience.py para visualizar dados dos FIIs. Para mais infos, vá par
 
 ## linux:
 
-`python3 fii_api.py < FII > -l -all -dy`
+`python3 src/helpers.py < FII > -l -all -dy`
 
 ## windows:
 
-`py fii_api.py < FII > -l -all -dy`
+`py src/helpers.py < FII > -l -all -dy`
 
 # Requirements:
 

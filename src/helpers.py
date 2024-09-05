@@ -1,9 +1,9 @@
 
 from collections import OrderedDict
+from typing import Any
 import requests as req
 import argparse
 import json
-import traceback
 import sys
 from os.path import exists
 
@@ -11,7 +11,7 @@ FILE_NAME = "fiis.json"
 FILE_PATH = f"./data/{FILE_NAME}"
 
 
-def print_err(*args, **kwargs):
+def print_err(*args,**kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
